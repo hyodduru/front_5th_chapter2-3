@@ -1,4 +1,4 @@
-import { forwardRef } from "react"
+import { forwardRef, HTMLAttributes, type ComponentPropsWithoutRef } from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
@@ -7,7 +7,11 @@ const DialogTrigger = DialogPrimitive.Trigger
 const DialogPortal = DialogPrimitive.Portal
 const DialogOverlay = DialogPrimitive.Overlay
 
-const DialogContent = forwardRef(({ className, children, ...props }, ref) => (
+type DialogContentProps = ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+  className?: string
+}
+
+const DialogContent = forwardRef<HTMLDivElement, DialogContentProps>(({ className = "", children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay className="fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
     <DialogPrimitive.Content
@@ -23,23 +27,26 @@ const DialogContent = forwardRef(({ className, children, ...props }, ref) => (
     </DialogPrimitive.Content>
   </DialogPortal>
 ))
-
 DialogContent.displayName = DialogPrimitive.Content.displayName
 
-const DialogHeader = ({ className, ...props }) => (
+type DialogHeaderProps = HTMLAttributes<HTMLDivElement>
+
+const DialogHeader = ({ className = "", ...props }: DialogHeaderProps) => (
   <div className={`flex flex-col space-y-1.5 text-center sm:text-left ${className}`} {...props} />
 )
-
 DialogHeader.displayName = "DialogHeader"
 
-const DialogTitle = forwardRef(({ className, ...props }, ref) => (
+interface DialogTitleProps extends DialogPrimitive.DialogTitleProps {
+  className?: string
+}
+
+const DialogTitle = forwardRef<HTMLHeadingElement, DialogTitleProps>(({ className = "", ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
     className={`text-lg font-semibold leading-none tracking-tight ${className}`}
     {...props}
   />
 ))
-
 DialogTitle.displayName = DialogPrimitive.Title.displayName
 
 export { Dialog, DialogTrigger, DialogPortal, DialogOverlay, DialogContent, DialogHeader, DialogTitle }
