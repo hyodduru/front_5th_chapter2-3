@@ -25,6 +25,8 @@ import {
   TableRow,
   Textarea,
 } from "../shared/ui"
+import { HighlightedText } from "../features/post/ui/HighLightedText"
+import { Post } from "../entities/post/model/post"
 
 const PostsManager = () => {
   const navigate = useNavigate()
@@ -355,13 +357,12 @@ const PostsManager = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {posts.map((post) => (
+        {posts.map((post: Post) => (
           <TableRow key={post.id}>
             <TableCell>{post.id}</TableCell>
             <TableCell>
               <div className="space-y-1">
-                <div>{highlightText(post.title, searchQuery)}</div>
-
+                <HighlightedText text={post.title} highlight={searchQuery} />
                 <div className="flex flex-wrap gap-1">
                   {post.tags?.map((tag) => (
                     <span
