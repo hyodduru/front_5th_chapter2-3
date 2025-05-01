@@ -6,12 +6,17 @@ import type { UseQueryOptions } from "@tanstack/react-query"
 import type { UsersResponse } from "@entities/user/model"
 import type { PostsResponse } from "@entities/post/model"
 
+const baseUrl = import.meta.env.PROD ? "https://dummyjson.com" : "/api"
+
+export const fetchApi = (path: string, options?: RequestInit) =>
+  fetch(`${baseUrl}${path}`, options).then((res) => res.json())
+
 export const usePostsBySearchQuery = (searchQuery: string, options?: UseQueryOptions<PostsWithUsersResponse>) =>
   useQuery<PostsWithUsersResponse>({
     queryKey: ["searchPosts", searchQuery],
     queryFn: async () => {
       try {
-        const response = await fetch(`/api/posts/search?q=${searchQuery}`)
+        const response = await fetchApi(`/api/posts/search?q=${searchQuery}`)
         return await response.json()
       } catch (error) {
         throw new Error(`게시물 검색 오류: ${error}`)
@@ -46,6 +51,6 @@ export const usePostsByTagQuery = (
         throw new Error(`태그별 게시물 가져오기 오류: ${error}`)
       }
     },
-    enabled: selectedTag !== "all",
+    enabled: !!selectedTag,
     ...options,
   })

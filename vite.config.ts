@@ -1,28 +1,44 @@
-import { defineConfig } from "vite"
+import { defineConfig, Plugin } from "vite"
 import react from "@vitejs/plugin-react"
 import path from "path"
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      "@app": path.resolve(__dirname, "src/app"),
-      "@pages": path.resolve(__dirname, "src/pages"),
-      "@widgets": path.resolve(__dirname, "src/widgets"),
-      "@features": path.resolve(__dirname, "src/features"),
-      "@entities": path.resolve(__dirname, "src/entities"),
-      "@shared": path.resolve(__dirname, "src/shared"),
+function apiReplace(): Plugin {
+  return {
+    name: "api-replace",
+    apply: "build",
+    transform(code, id) {
+      if (!id.match(/\.(ts|js|tsx|jsx)$/)) return
+      return code.replace(
+        /(['"`])\/api([^"'`\\]*)\1/g,
+        (_, quote, apiPath) => `${quote}https://dummyjson.com${apiPath}${quote}`,
+      )
     },
-  },
-  server: {
-    proxy: {
-      "/api": {
-        // target: 'https://jsonplaceholder.typicode.com',
-        target: "https://dummyjson.com",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+  }
+}
+
+export default defineConfig(({ command }) => {
+  const base = command === "build" ? "/front_5th_chapter2-3/" : "/"
+  return {
+    base,
+    plugins: [react(), apiReplace()],
+    resolve: {
+      alias: {
+        "@app": path.resolve(__dirname, "src/app"),
+        "@pages": path.resolve(__dirname, "src/pages"),
+        "@widgets": path.resolve(__dirname, "src/widgets"),
+        "@features": path.resolve(__dirname, "src/features"),
+        "@entities": path.resolve(__dirname, "src/entities"),
+        "@shared": path.resolve(__dirname, "src/shared"),
       },
     },
-  },
+    server: {
+      proxy: {
+        "/api": {
+          target: "https://dummyjson.com", // ✅ 개발 환경에서는 proxy로 처리
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+      },
+    },
+  }
 })
