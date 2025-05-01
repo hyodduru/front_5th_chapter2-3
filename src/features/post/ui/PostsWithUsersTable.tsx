@@ -8,7 +8,7 @@ import { usePostsWithUsersQuery } from "@features/post/api"
 
 import { OpenUserDialogButton } from "@entities/user/ui"
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@shared/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@shared/ui/Table"
 
 export const PostsWithUsersTable = () => {
   const limit = useAtomValue(limitAtom)

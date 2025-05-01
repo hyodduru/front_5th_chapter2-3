@@ -1,6 +1,6 @@
 import { forwardRef, type HTMLAttributes } from "react"
 
-export { Button } from "./button"
+export { Button } from "./Button"
 
 type CardProps = HTMLAttributes<HTMLDivElement>
 const Card = forwardRef<HTMLDivElement, CardProps>(({ className = "", ...props }, ref) => (
