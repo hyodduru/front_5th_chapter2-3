@@ -2,17 +2,14 @@ import { useEffect } from "react"
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { Edit2, Plus, ThumbsUp, Trash2 } from "lucide-react"
 
-import { searchQueryAtom } from "@features/searchPost/model"
-import { selectedPostAtom } from "@features/postDetail/model"
-import { updateCommentAtom } from "@features/comments/model"
-import { useDeleteCommentMutation } from "@features/comments/api/deleteComment.api"
-import { useLikeCommentMutation } from "@features/comments/api/likeComment.api"
+import { searchQueryAtom, selectedPostAtom } from "@features/post/model"
+import { updateCommentAtom, newCommentAtom } from "@features/comments/model"
+import { useDeleteCommentMutation, useLikeCommentMutation } from "@features/comments/api"
 import { useCommentsQuery } from "@entities/comment/api"
 import { commentsAtom } from "@entities/comment/model"
 import { highlightText } from "@shared/lib"
 import { dialogAtomFamily } from "@shared/model"
 import { Button } from "@shared/ui"
-import { newCommentAtom } from "../model/addComment.atom"
 
 export const CommentsList = () => {
   const selectedPost = useAtomValue(selectedPostAtom)
